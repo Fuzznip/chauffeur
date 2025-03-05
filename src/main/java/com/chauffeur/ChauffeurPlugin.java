@@ -16,9 +16,13 @@ import net.runelite.client.game.ItemStack;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.loottracker.LootReceived;
+import net.runelite.client.ui.ClientToolbar;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 import net.runelite.http.api.loottracker.LootRecordType;
 
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 @Slf4j
@@ -46,6 +50,11 @@ public class ChauffeurPlugin extends Plugin
 	@Inject
 	private XPNotifier xpNotifier;
 
+	@Inject
+	private ClientToolbar clientToolbar;
+	private NavigationButton navButton;
+	private ChauffeurPanel chauffeurPanel;
+
 	public static String sanitize(String str)
 	{
 		if (str == null || str.isEmpty()) return "";
@@ -55,12 +64,26 @@ public class ChauffeurPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
+		chauffeurPanel = injector.getInstance(ChauffeurPanel.class);
+		final BufferedImage image = ImageUtil.loadImageResource(ChauffeurPlugin.class, "/panel_icon.png");
+		navButton = NavigationButton.builder()
+			.tooltip("Chauffeur")
+			.icon(image)
+			.priority(9)
+			.panel(chauffeurPanel)
+			.build();
+
+		clientToolbar.addNavigation(navButton);
+		chauffeurPanel.init();
+
 		log.info("Chauffeur started!");
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
+		chauffeurPanel.shutdown();
+		clientToolbar.removeNavigation(navButton);
 		log.info("Chauffeur stopped!");
 	}
 

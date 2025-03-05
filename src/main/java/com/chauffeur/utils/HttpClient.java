@@ -62,7 +62,6 @@ public class HttpClient {
         }
     }
 
-
     public String getRequestString(String url) {
         Request request = new Request.Builder()
                 .url(url)
@@ -81,11 +80,12 @@ public class HttpClient {
         }
     }
 
-    public <T> T getRequest(String url, Class<T> responseType) {
+    // Make a GET request to the specified URL and parse the json response
+    public <T> T getRequest(String url, Class<T> classOfT) {
         String responseBody = getRequestString(url);
         if (responseBody != null) {
             try {
-                return gson.fromJson(responseBody, responseType);
+                return gson.fromJson(responseBody, classOfT);
             } catch (Exception e) {
                 log.error("Failed to parse response", e);
                 return null;
