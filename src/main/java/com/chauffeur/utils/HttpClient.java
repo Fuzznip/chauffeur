@@ -26,39 +26,46 @@ public class HttpClient {
         this.gson = new Gson();
     }
 
-    public void sendPostRequest(String url, Object payload) {
-        String jsonBody = gson.toJson(payload);
-        RequestBody body = RequestBody.create(JSON, jsonBody);
+    public String postRequestString(String url, Object body) {
+        String jsonBody = gson.toJson(body);
+        RequestBody requestBody = RequestBody.create(JSON, jsonBody);
+
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .post(requestBody)
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 log.warn("Request failed: {} {}", response.code(), response.message());
+                return null;
             }
-            response.close();
+            return response.body() != null ? response.body().string() : null;
         } catch (IOException e) {
             log.error("Failed to send request", e);
+            return null;
         }
     }
 
-    public void sendGetRequest(String url) {
+    public <T> T postRequest(String url, Object body, Class<T> classOfT) {
+        String jsonBody = gson.toJson(body);
+        RequestBody requestBody = RequestBody.create(JSON, jsonBody);
+
         Request request = new Request.Builder()
                 .url(url)
-                .get()
+                .post(requestBody)
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 log.warn("Request failed: {} {}", response.code(), response.message());
+                return null;
             }
-            response.close();
+            String responseBody = response.body() != null ? response.body().string() : null;
+            return responseBody != null ? gson.fromJson(responseBody, classOfT) : null;
         } catch (IOException e) {
             log.error("Failed to send request", e);
+            return null;
         }
     }
 

@@ -118,8 +118,12 @@ public class ChauffeurPlugin extends Plugin
 	public void onLootReceived(LootReceived lootReceived)
 	{
 		log.info("We got a loot drop from " + lootReceived.getName());
-		if(lootReceived.getType() == LootRecordType.PICKPOCKET)
+		if(lootReceived.getType() == LootRecordType.PICKPOCKET){
 			log.info("pickpocket!");
+		}
+		else{
+			lootNotifier.handleNotify(lootReceived.getItems(), lootReceived.getName());
+		}
 	}
 
 	@Subscribe(priority = 1)
@@ -128,9 +132,9 @@ public class ChauffeurPlugin extends Plugin
 		NPC npc = npcLootReceived.getNpc();
 		Collection<ItemStack> items = npcLootReceived.getItems();
 
-		lootNotifier.handleNotify(items, npc.getName());
-
-		log.info("We got an NPC drop from " + npc.getName());
+		log.debug("OK LETS CALL THE LOOT NOTIFIER");
+		//lootNotifier.handleNotify(items, npc.getName());
+		log.debug("LOOT NOTIFIER CALLED");
 	}
 
 	@Subscribe

@@ -10,6 +10,6 @@ public class XPNotifier {
     private ClientPopup clientPopup;
     public void handleNotify(Skill skill, int xp)
     {
-        clientPopup.addNotificationToQueue(skill.getName(), String.valueOf(xp));
+//        clientPopup.addNotificationToQueue(skill.getName(), String.valueOf(xp));
     }
 }

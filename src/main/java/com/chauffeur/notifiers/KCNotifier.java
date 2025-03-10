@@ -9,6 +9,6 @@ public class KCNotifier {
     private ClientPopup clientPopup;
     public void handleNotify(String chatMessage)
     {
-        clientPopup.addNotificationToQueue("Tile Completed!", "You killed a " + chatMessage);
+//        clientPopup.addNotificationToQueue("Tile Completed!", "You killed a " + chatMessage);
     }
 }
