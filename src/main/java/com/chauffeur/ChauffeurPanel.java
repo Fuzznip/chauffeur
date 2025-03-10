@@ -79,9 +79,9 @@ public class ChauffeurPanel extends PluginPanel {
         }
 
         configManager.setConfiguration("chauffeur", "eventCode", eventCode);
-
         String configUrl = ensureHttpProtocol(config.serverUrl());
         String url = String.format("%s/event?event_code=%s", configUrl, eventCode);
+
         log.info("Fetching event config from {}", url);
 
         EventConfig fetchedEventConfig = httpClient.getRequest(url, EventConfig.class);
